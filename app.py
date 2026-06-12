@@ -15,6 +15,10 @@ if "OPENAI_API_KEY" in st.secrets:
 st.set_page_config(page_title="Alcohol Label Auditor", layout="wide")
 st.title("🔍 Alcohol Label Compliance Auditor")
 
+# --- Session state for form reset ---
+if "audit_key" not in st.session_state:
+    st.session_state.audit_key = 0
+
 # --- UI Setup ---
 tab1, tab2 = st.tabs(["Single Label Audit", "Batch Processing"])
 
@@ -67,7 +71,7 @@ def display_results(results):
 # --- Tab 1: Single Label Audit ---
 with tab1:
     st.header("Single Label Audit")
-    with st.form("single_label_form"):
+    with st.form(key=f"single_label_form_{st.session_state.audit_key}"):
         col1, col2 = st.columns(2)
         with col1:
             brand_name = st.text_input("Brand Name")
@@ -79,7 +83,8 @@ with tab1:
             bottler = st.text_input("Bottler Info")
             origin = st.text_input("Country of Origin")
 
-        uploaded_file = st.file_uploader("Upload Label Image", type=["jpg", "jpeg", "png"])
+        uploaded_file = st.file_uploader("Upload Label Image", type=["jpg", "jpeg", "png"],
+                                         key=f"uploader_{st.session_state.audit_key}")
         submit = st.form_submit_button("Check Label Compliance")
 
     if submit and uploaded_file:
@@ -99,6 +104,9 @@ with tab1:
 
         st.image(image_bytes, width=400, caption="Label Preview")
         display_results(result)
+        if st.button("🔄 Start New Audit", key="clear_btn"):
+            st.session_state.audit_key += 1
+            st.rerun()
 
     elif submit and not uploaded_file:
         st.warning("Please upload a label image before submitting.")

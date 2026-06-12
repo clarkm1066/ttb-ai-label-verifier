@@ -29,8 +29,9 @@ GOVERNMENT WARNING RULE — this is your most important check:
 BRAND NAME RULE:
 - Compare the brand name on the label to the Application Data brand name.
 - If they match exactly (including case), it is a PASS.
-- If they differ only in capitalization (e.g., "STONE'S THROW" vs "Stone's Throw"), return status "WARN"
-  with a note that human review is recommended — do NOT hard-fail on case differences alone.
+- If they differ only in capitalization (e.g., "STONE'S THROW" vs "Stone's Throw", or "COPPER STILL" vs "Copper Still"),
+  you MUST return status "WARN" with details noting the case difference and recommending human review.
+  Do NOT return PASS when capitalization differs — a WARN is required.
 - If the text is substantively different, return "FAIL".
 
 OTHER FIELD RULES:
@@ -62,6 +63,7 @@ MISSING FIELD RULES — this distinction is critical:
 
 overall_status must be "NON-COMPLIANT" if ANY field is "FAIL".
 overall_status must be "COMPLIANT" only if all mandatory fields are physically present on the label (WARN due to missing application data is acceptable for COMPLIANT).
+auditor_notes must accurately summarize only the issues found in the checks object. Do not mention a problem in auditor_notes that is not reflected as FAIL or WARN in the checks. Do not omit a FAIL or WARN from the summary.
 """
 
 EXTRACTION_SYSTEM_PROMPT = """You are a data extractor for TTB alcohol label compliance.
