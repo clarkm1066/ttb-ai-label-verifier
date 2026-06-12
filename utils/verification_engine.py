@@ -38,7 +38,8 @@ OTHER FIELD RULES:
 - ABV: the percentage on the label must match the application value. Accept minor formatting differences
   (e.g., "45%" vs "45% Alc./Vol.") but flag numeric mismatches as FAIL.
 - Net Contents: must match application value. Accept equivalent representations (e.g., "750 mL" = "750ml").
-- Class/Type, Bottler Info, Country of Origin: flag any substantive mismatch as FAIL.
+- Class/Type, Bottler Info: flag any substantive mismatch as FAIL.
+- Country of Origin: accept equivalent representations (e.g., "Product of USA", "USA", "United States", "Made in USA" are all equivalent). Only fail on a genuinely different country.
 
 OUTPUT FORMAT — respond with a JSON object only, no prose:
 {{

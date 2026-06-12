@@ -15,9 +15,13 @@ if "OPENAI_API_KEY" in st.secrets:
 st.set_page_config(page_title="Alcohol Label Auditor", layout="wide")
 st.title("🔍 Alcohol Label Compliance Auditor")
 
-# --- Session state for form reset ---
+# --- Session state for form reset and result storage ---
 if "audit_key" not in st.session_state:
     st.session_state.audit_key = 0
+if "audit_result" not in st.session_state:
+    st.session_state.audit_result = None
+if "audit_image" not in st.session_state:
+    st.session_state.audit_image = None
 
 # --- UI Setup ---
 tab1, tab2 = st.tabs(["Single Label Audit", "Batch Processing"])
@@ -71,6 +75,15 @@ def display_results(results):
 # --- Tab 1: Single Label Audit ---
 with tab1:
     st.header("Single Label Audit")
+
+    # Clear button appears at top once results are ready
+    if st.session_state.audit_result is not None:
+        if st.button("🔄 Start New Audit"):
+            st.session_state.audit_result = None
+            st.session_state.audit_image = None
+            st.session_state.audit_key += 1
+            st.rerun()
+
     with st.form(key=f"single_label_form_{st.session_state.audit_key}"):
         col1, col2 = st.columns(2)
         with col1:
@@ -98,18 +111,19 @@ with tab1:
             "country_of_origin": origin,
         }
         with st.spinner("Analyzing..."):
-            # Read bytes once so the stream is available for both the engine and st.image
             image_bytes = uploaded_file.read()
             result = verify_label_compliance(image_bytes, uploaded_file.name, app_data)
-
-        st.image(image_bytes, width=400, caption="Label Preview")
-        display_results(result)
-        if st.button("🔄 Start New Audit", key="clear_btn"):
-            st.session_state.audit_key += 1
-            st.rerun()
+        st.session_state.audit_result = result
+        st.session_state.audit_image = image_bytes
+        st.rerun()
 
     elif submit and not uploaded_file:
         st.warning("Please upload a label image before submitting.")
+
+    # Display stored results
+    if st.session_state.audit_result is not None:
+        st.image(st.session_state.audit_image, width=400, caption="Label Preview")
+        display_results(st.session_state.audit_result)
 
 
 # --- Tab 2: Batch Processing ---
