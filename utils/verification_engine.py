@@ -54,9 +54,14 @@ OUTPUT FORMAT — respond with a JSON object only, no prose:
   }}
 }}
 
-If a field is not present in the Application Data and cannot be verified, set status to "WARN" and note
-that it could not be verified against application data.
+MISSING FIELD RULES — this distinction is critical:
+- If a mandatory field is NOT VISIBLE on the label at all → "FAIL" (missing required field)
+- If a mandatory field IS visible on the label but no Application Data was provided to compare against → "WARN" (present but unverifiable)
+- Mandatory fields that must be physically present on every label: brand_name, class_type, abv, net_contents, bottler_info, government_warning
+- country_of_origin is mandatory only for imported products; if the label indicates a domestic product it may be omitted without penalty
+
 overall_status must be "NON-COMPLIANT" if ANY field is "FAIL".
+overall_status must be "COMPLIANT" only if all mandatory fields are physically present on the label (WARN due to missing application data is acceptable for COMPLIANT).
 """
 
 EXTRACTION_SYSTEM_PROMPT = """You are a data extractor for TTB alcohol label compliance.
