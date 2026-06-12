@@ -6,7 +6,7 @@ An AI-powered prototype that helps compliance agents validate alcohol beverage l
 
 ## 🌐 Live Demo
 
-**[https://YOUR-APP-NAME.streamlit.app](https://YOUR-APP-NAME.streamlit.app)**
+**[https://ttb-label-auditor.streamlit.app](https://ttb-label-auditor.streamlit.app)**
 
 > No installation required. Open the link above in any browser to begin testing.
 
@@ -140,7 +140,7 @@ All failure points are caught and returned as structured error objects rather th
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR-USERNAME/ttb-ai-label-verifier.git
+git clone https://github.com/clarkm1066/ttb-ai-label-verifier.git
 cd ttb-ai-label-verifier
 
 # 2. Install dependencies
